@@ -11,14 +11,16 @@ public class DebitsDto {
     private String name;
     private Double price;
     private String date;
+    private String payday;
 
-    DebitsDto(){}
+	DebitsDto(){}
 
-    public DebitsDto(Long id,String name, Double price, String date) {
+    public DebitsDto(Long id,String name, Double price, String date, String payday) {
     	this.id = id;
         this.name = name;
         this.price = price;
         this.date = date;
+        this.payday = payday;
     }
     
     public DebitsDto(Debits debits) {
@@ -26,6 +28,7 @@ public class DebitsDto {
         name = debits.getName();
         price = debits.getPrice();
         date = debits.getDate();
+        payday = debits.getPayday();
     }
     
 	public Long getId() {
@@ -58,5 +61,13 @@ public class DebitsDto {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	public String getPayday() {
+		return payday;
+	}
+	
+	public void setPayday(String payday) {
+		this.payday = payday;
 	}
 }

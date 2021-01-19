@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +41,7 @@ public class DebitsController {
     @GetMapping("/detail/{id}")
     public ResponseEntity<Debits> findById(@PathVariable("id") Long id){
         if(!service.existsById(id)) {
-            return new ResponseEntity("Id not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
         }
         Debits debits = service.findOneById(id).get();
         return new ResponseEntity(debits, HttpStatus.OK);
@@ -49,7 +50,7 @@ public class DebitsController {
     @GetMapping("/detailname/{name}")
     public ResponseEntity<?> findById(@PathVariable("name") String name){
         if(service.findByName(name).isEmpty()){
-            return new ResponseEntity("Name invalid", HttpStatus.NOT_FOUND);
+            return new ResponseEntity("O nome não existe.", HttpStatus.NOT_FOUND);
         }
         Debits debits = service.findByName(name).get();
         return new ResponseEntity(debits, HttpStatus.OK);
@@ -64,17 +65,38 @@ public class DebitsController {
     				.buildAndExpand(dto.getId()).toUri();
     		return ResponseEntity.created(uri).body(dto);    		
     	}else {
-    		return new ResponseEntity("Name exists", HttpStatus.BAD_REQUEST);
+    		return new ResponseEntity("O nome já existe.", HttpStatus.BAD_REQUEST);
     	}
 	}
     
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
     	if(service.existsById(id)) {
     		service.delete(id);
-    		return new ResponseEntity("Successfully deleted", HttpStatus.OK);
+    		return new ResponseEntity("Deletado com sucesso.", HttpStatus.OK);
     	}else {
-    		return new ResponseEntity("Not Found", HttpStatus.NOT_FOUND);
+    		return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
+    	}
+    }
+    
+    @PutMapping("/{id}/update")
+    public ResponseEntity<DebitsDto> update(@PathVariable("id") Long id){
+    	if(service.existsById(id)) {
+    		DebitsDto dto = service.update(id);
+    		return new ResponseEntity(dto, HttpStatus.OK);
+    	}else {
+    		return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
+    	}
+    	
+    }
+    
+    @PutMapping("/{id}/payout")
+    public ResponseEntity<DebitsDto> payOut(@PathVariable("id") Long id) {
+    	if(service.existsById(id)) {
+    		DebitsDto debitsDto = service.setPaidOut(id);
+    		return new ResponseEntity(debitsDto ,HttpStatus.OK);
+    	}else {
+    		return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
     	}
     }
 }

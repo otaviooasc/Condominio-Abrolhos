@@ -14,14 +14,16 @@ public class Debits {
     private String name;
     private Double price;
     private String date;
+    private String payday;
 
-    Debits(){}
+    public Debits(){}
 
-    public Debits(Long id, String name, Double price, String date) {
+    public Debits(Long id,String name, Double price, String date, String payday) {
     	this.id = id;
         this.name = name;
         this.price = price;
         this.date = date;
+        this.payday = payday;
     }
 
 	public Long getId() {
@@ -54,5 +56,13 @@ public class Debits {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+	
+	public String getPayday() {
+		return payday;
+	}
+	
+	public void setPayday(String payday) {
+		this.payday = payday;
 	}
 }

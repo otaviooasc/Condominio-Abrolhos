@@ -9,5 +9,4 @@ public class AbrolhosApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AbrolhosApplication.class, args);
 	}
-
 }
