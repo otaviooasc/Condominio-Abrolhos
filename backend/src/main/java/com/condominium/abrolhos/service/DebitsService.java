@@ -67,10 +67,9 @@ public class DebitsService {
     }
     
     @Transactional
-    public DebitsDto setPaidOut(Long id) {
-    	Debits entity = repository.getOne(id);
-    	entity.setPayday(String.valueOf(LocalDate.now()));
+    public Debits setPaidOut(Debits pDebits) {
+    	Debits entity = pDebits;
     	entity = repository.save(entity);
-    	return new DebitsDto(entity);
+    	return entity;
     }
 }

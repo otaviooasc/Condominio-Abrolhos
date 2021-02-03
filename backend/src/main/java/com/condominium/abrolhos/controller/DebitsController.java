@@ -3,7 +3,6 @@ package com.condominium.abrolhos.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,14 +29,15 @@ public class DebitsController {
     @Autowired
     DebitsService service;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping("/list")
     public ResponseEntity<List<Debits>> list() {
         List<Debits> list = service.list();
         return new ResponseEntity(list, HttpStatus.OK);
     }
 
-    @GetMapping("/detail/{id}")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	@GetMapping("/detail/{id}")
     public ResponseEntity<Debits> findById(@PathVariable("id") Long id){
         if(!service.existsById(id)) {
             return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
@@ -47,7 +46,8 @@ public class DebitsController {
         return new ResponseEntity(debits, HttpStatus.OK);
     }
 
-    @GetMapping("/detailname/{name}")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@GetMapping("/detailname/{name}")
     public ResponseEntity<?> findById(@PathVariable("name") String name){
         if(service.findByName(name).isEmpty()){
             return new ResponseEntity("O nome não existe.", HttpStatus.NOT_FOUND);
@@ -57,7 +57,8 @@ public class DebitsController {
     }
     
     
-    @PostMapping
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@PostMapping
 	public ResponseEntity<DebitsDto> insert(@RequestBody DebitsDto dto) {
     	if(service.findByName(dto.getName()).isEmpty()) {
     		dto = service.insert(dto);
@@ -69,7 +70,8 @@ public class DebitsController {
     	}
 	}
     
-    @DeleteMapping("/delete/{id}")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
     	if(service.existsById(id)) {
     		service.delete(id);
@@ -79,22 +81,25 @@ public class DebitsController {
     	}
     }
     
-    @PutMapping("/{id}/update")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@PutMapping("/{id}/update")
     public ResponseEntity<DebitsDto> update(@PathVariable("id") Long id){
     	if(service.existsById(id)) {
-    		DebitsDto dto = service.update(id);
-    		return new ResponseEntity(dto, HttpStatus.OK);
+    		DebitsDto debitsDto = service.update(id);
+    		return new ResponseEntity(debitsDto, HttpStatus.OK);
     	}else {
     		return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
     	}
     	
     }
     
-    @PutMapping("/{id}/payout")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@PutMapping("/{id}/payout")
     public ResponseEntity<DebitsDto> payOut(@PathVariable("id") Long id) {
-    	if(service.existsById(id)) {
-    		DebitsDto debitsDto = service.setPaidOut(id);
-    		return new ResponseEntity(debitsDto ,HttpStatus.OK);
+    	Debits debits = service.findOneById(id).get();
+    	if(!debits.equals(null)) {
+    		debits = service.setPaidOut(debits);
+    		return new ResponseEntity(debits ,HttpStatus.OK);
     	}else {
     		return new ResponseEntity("Id não encontrado!", HttpStatus.NOT_FOUND);
     	}
